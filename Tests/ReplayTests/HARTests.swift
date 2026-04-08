@@ -1319,6 +1319,24 @@ struct HARTests {
             #expect(log.creator.name == "MyApp/2.0")
         }
 
+        @Test("save to non existing directory")
+        func saveToNonExistingDirectory() throws {
+            var log = HAR.create()
+            log.entries.append(makeTestEntry())
+            log.comment = "Test HAR file"
+
+            let tempSubdirURL = URL(fileURLWithPath: NSTemporaryDirectory())
+                .appendingPathComponent("subdir")
+            let tempURL = tempSubdirURL
+                .appendingPathComponent("HARTests_saveAndLoad.har")
+
+            try HAR.save(log, to: tempURL)
+
+            #expect(FileManager.default.fileExists(atPath: tempURL.path))
+
+            try? FileManager.default.removeItem(at: tempSubdirURL)
+        }
+
         @Test("save and load roundtrip")
         func saveAndLoad() throws {
             var log = HAR.create()
