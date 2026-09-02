@@ -1325,16 +1325,18 @@ struct HARTests {
             log.entries.append(makeTestEntry())
             log.comment = "Test HAR file"
 
+            // Use a directory that cannot already exist,
+            // so the test exercises directory creation
+            // and never deletes anything it didn't create.
             let tempSubdirURL = URL(fileURLWithPath: NSTemporaryDirectory())
-                .appendingPathComponent("subdir")
+                .appendingPathComponent("HARTests_\(UUID().uuidString)")
+            defer { try? FileManager.default.removeItem(at: tempSubdirURL) }
             let tempURL = tempSubdirURL
                 .appendingPathComponent("HARTests_saveAndLoad.har")
 
             try HAR.save(log, to: tempURL)
 
             #expect(FileManager.default.fileExists(atPath: tempURL.path))
-
-            try? FileManager.default.removeItem(at: tempSubdirURL)
         }
 
         @Test("save and load roundtrip")
