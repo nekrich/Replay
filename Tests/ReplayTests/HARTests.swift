@@ -1331,7 +1331,8 @@ struct HARTests {
             let tempSubdirURL = URL(fileURLWithPath: NSTemporaryDirectory())
                 .appendingPathComponent("HARTests_\(UUID().uuidString)")
             defer { try? FileManager.default.removeItem(at: tempSubdirURL) }
-            let tempURL = tempSubdirURL
+            let tempURL =
+                tempSubdirURL
                 .appendingPathComponent("HARTests_saveAndLoad.har")
 
             try HAR.save(log, to: tempURL)
